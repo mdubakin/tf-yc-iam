@@ -5,19 +5,19 @@ resource "yandex_iam_service_account" "main" {
 }
 
 resource "yandex_resourcemanager_folder_iam_member" "main" {
-  for_each = length(var.folder_roles) > 0 ? toset(var.folder_roles) : []
+  for_each = try({ for index, map in var.folder_roles : index => map }, {})
 
-  folder_id = var.folder_id
+  folder_id = each.value.folder_id != null ? each.value.folder_id : var.folder_id
   member    = "serviceAccount:${yandex_iam_service_account.main.id}"
-  role      = each.value
+  role      = each.value.role
 }
 
 resource "yandex_resourcemanager_cloud_iam_member" "main" {
-  for_each = length(var.cloud_roles) > 0 ? toset(var.cloud_roles) : []
+  for_each = try({ for index, map in var.cloud_roles : index => map }, {})
 
-  cloud_id = var.cloud_id
+  cloud_id = each.value.cloud_id != null ? each.value.cloud_id : var.cloud_id
   member   = "serviceAccount:${yandex_iam_service_account.main.id}"
-  role     = each.value
+  role     = each.value.role
 }
 
 resource "yandex_iam_service_account_api_key" "main" {

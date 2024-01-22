@@ -34,15 +34,21 @@ variable "description" {
 // ----- //
 
 variable "folder_roles" {
-  description = "A list of roles that will be attached to in folder scope"
-  type        = list(string)
-  default     = []
+  description = "A list of maps with roles and folder id that will be attached to in folder scope"
+  type = list(object({
+    role      = string
+    folder_id = optional(string)
+  }))
+  default = null
 }
 
 variable "cloud_roles" {
-  description = "A list of roles that will be attached to in cloud scope"
-  type        = list(string)
-  default     = []
+  description = "A list of maps with roles and folder id that will be attached to in cloud scope"
+  type = list(object({
+    role     = string
+    cloud_id = optional(string)
+  }))
+  default = null
 }
 
 // ---------- //
